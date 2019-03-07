@@ -1,0 +1,40 @@
+{% set items = [] %}
+{% for event in events %}
+  {% set content %}
+    <div data-dot="<span></span><div>{{ event.date|date('M') }}</div><em>{{ event.date|date('Y') }}</em>">
+      <p><small>{{ event.date|date("d M Y") }}</small></p>
+      <h3>{{ event.title }}</h3>
+      {{ event.description }}
+      <nav data-gallery-group>
+        {% for item in event.gallery.items %}
+        <a href="{{ item.href|raw }}" title="{{ item.title }}" type="{{ item.type }}" data-poster="{{ item.poster }}" data-youtube="{{ item.youtube }}" data-vimeo="{{ item.vimeo }}" data-gallery>
+          {% if item.preview %}
+            {{ item.preview }}
+          {% else %}
+            <img src="{{ item.thumbnail }}" alt="{{ item.title }}"/>
+          {% endif %}
+        </a>
+        {# @TODO: Make include work. #}
+        {# include '../../atomic-gallery/atomic-gallery.preview.twig' #}
+        {% endfor %}
+      </nav>
+    </div>
+  {% endset %}
+  {% set items = items|merge([content]) %}
+{% endfor %}
+
+{% include '../../atomic-carousel/atomic-carousel.twig' with {
+  'carousel': {
+    'items': items,
+    'options': {
+      'items': 1,
+      'dots': true,
+      'dotsData': true
+    },
+    'modifiers': [
+      'events-carousel'
+    ]
+  }
+} %}
+
+{% include '../../atomic-gallery/atomic-gallery.lightbox.twig' %}
