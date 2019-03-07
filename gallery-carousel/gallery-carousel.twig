@@ -1,0 +1,30 @@
+{% set items = [] %}
+{% for item in gallery.items %}
+  {% set preview %}
+    <img src="{{ item.poster ?: item.href }}" alt="{{ item.title }}"/>
+  {% endset %}
+  {% set item = item|merge({ 'preview': preview }) %}
+  {% set content %}
+    <a href="{{ item.href|raw }}" title="{{ item.title }}" type="{{ item.type }}" data-poster="{{ item.poster }}" data-youtube="{{ item.youtube }}" data-vimeo="{{ item.vimeo }}" data-gallery>
+      {% if item.preview %}
+        {{ item.preview }}
+      {% else %}
+        <img src="{{ item.thumbnail }}" alt="{{ item.title }}"/>
+      {% endif %}
+    </a>
+    {# @TODO: Make include work. #}
+    {# include '../../atomic-gallery/atomic-gallery.preview.twig' #}
+  {% endset %}
+  {% set items = items|merge([content]) %}
+{% endfor %}
+
+{% include '../../atomic-carousel/atomic-carousel.twig' with {
+  'carousel': {
+    'items': items,
+    'options': {
+      'items': 3
+    }
+  }
+} %}
+
+{% include '../../atomic-gallery/atomic-gallery.lightbox.twig' %}

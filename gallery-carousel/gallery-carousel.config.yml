@@ -1,0 +1,5 @@
+title: Gallery Carousel
+status: 'wip'
+preview: '@preview'
+context:
+  gallery: '@atomic-gallery.gallery'
